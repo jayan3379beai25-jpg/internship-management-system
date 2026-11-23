@@ -141,6 +141,13 @@ public class Intern {
             return;
         }
 
+        System.out.print("Set Login Password (or 0 to go back): ");
+        String password = sc.nextLine().trim();
+        if (password.equals("0") || password.equalsIgnoreCase("back")) {
+            System.out.println("Returning to menu...");
+            return;
+        }
+
         // Show departments and mentors so user can pick IDs
         Department.viewDepartments();
         System.out.print("Department ID (or 0 to go back): ");
@@ -160,8 +167,8 @@ public class Intern {
         }
         int mentorId = Integer.parseInt(mentorStr);
 
-        String sql = "INSERT INTO interns (full_name, email, phone, college, join_date, dept_id, mentor_id) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO interns (full_name, email, phone, college, join_date, password, dept_id, mentor_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, name);
@@ -169,8 +176,9 @@ public class Intern {
             ps.setString(3, phone);
             ps.setString(4, college);
             ps.setDate(5, Date.valueOf(joinDate));
-            ps.setInt(6, deptId);
-            ps.setInt(7, mentorId);
+            ps.setString(6, password);
+            ps.setInt(7, deptId);
+            ps.setInt(8, mentorId);
             ps.executeUpdate();
             System.out.println("Intern added successfully!");
         } catch (Exception e) {
